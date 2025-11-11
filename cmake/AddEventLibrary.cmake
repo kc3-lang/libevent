@@ -142,12 +142,19 @@ macro(add_event_library LIB_NAME)
                 OUTPUT_NAME "${LIB_NAME}-${EVENT_PACKAGE_RELEASE}.${CURRENT_MINUS_AGE}"
                 LINK_FLAGS "-compatibility_version ${COMPATIBILITY_VERSION} -current_version ${COMPATIBILITY_VERSION}.${EVENT_ABI_LIBVERSION_REVISION}")
         else()
-            math(EXPR CURRENT_MINUS_AGE "${EVENT_ABI_LIBVERSION_CURRENT}-${EVENT_ABI_LIBVERSION_AGE}")
-            set_target_properties(
-                "${LIB_NAME}_shared" PROPERTIES
-                OUTPUT_NAME "${LIB_NAME}-${EVENT_PACKAGE_RELEASE}"
-                VERSION "${CURRENT_MINUS_AGE}.${EVENT_ABI_LIBVERSION_AGE}.${EVENT_ABI_LIBVERSION_REVISION}"
-                SOVERSION "${CURRENT_MINUS_AGE}")
+            # For Android, use unversioned SONAME
+            if (ANDROID OR CMAKE_SYSTEM_NAME MATCHES "Android" OR CMAKE_C_COMPILER MATCHES "android")
+                set_target_properties(
+                    "${LIB_NAME}_shared" PROPERTIES
+                    OUTPUT_NAME "${LIB_NAME}")
+            else()
+                math(EXPR CURRENT_MINUS_AGE "${EVENT_ABI_LIBVERSION_CURRENT}-${EVENT_ABI_LIBVERSION_AGE}")
+                set_target_properties(
+                    "${LIB_NAME}_shared" PROPERTIES
+                    OUTPUT_NAME "${LIB_NAME}-${EVENT_PACKAGE_RELEASE}"
+                    VERSION "${CURRENT_MINUS_AGE}.${EVENT_ABI_LIBVERSION_AGE}.${EVENT_ABI_LIBVERSION_REVISION}"
+                    SOVERSION "${CURRENT_MINUS_AGE}")
+            endif()
         endif()
 
         if (NOT WIN32)
