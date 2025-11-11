@@ -283,9 +283,9 @@ AM_CPPFLAGS = -I$(srcdir)/compat -I./include -I$(srcdir)/include $(SYS_INCLUDES)
 AM_LDFLAGS = $(LIBEVENT_LDFLAGS)
 
 if ANDROID
-	GENERIC_LDFLAGS = "-avoid-version $(NO_UNDEFINED) $(AM_LDFLAGS)"
+GENERIC_LDFLAGS = -avoid-version $(NO_UNDEFINED) $(AM_LDFLAGS)
 else
-	GENERIC_LDFLAGS = "-version-info $(VERSION_INFO) $(RELEASE) $(NO_UNDEFINED) $(AM_LDFLAGS)"
+GENERIC_LDFLAGS = -version-info $(VERSION_INFO) $(RELEASE) $(NO_UNDEFINED) $(AM_LDFLAGS)
 endif
 
 libevent_la_SOURCES = $(CORE_SRC) $(EXTRAS_SRC)
