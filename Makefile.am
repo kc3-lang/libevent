@@ -282,12 +282,7 @@ AM_CFLAGS = $(LIBEVENT_CFLAGS)
 AM_CPPFLAGS = -I$(srcdir)/compat -I./include -I$(srcdir)/include $(SYS_INCLUDES) $(LIBEVENT_CPPFLAGS)
 AM_LDFLAGS = $(LIBEVENT_LDFLAGS)
 
-# For Android, use unversioned SONAME
-ifeq ($(findstring android,$(CC)),android)
-  GENERIC_LDFLAGS = -avoid-version $(NO_UNDEFINED) $(AM_LDFLAGS)
-else
-  GENERIC_LDFLAGS = -version-info $(VERSION_INFO) $(RELEASE) $(NO_UNDEFINED) $(AM_LDFLAGS)
-endif
+GENERIC_LDFLAGS = $(shell case "$(CC)" in *android*) echo "-avoid-version $(NO_UNDEFINED) $(AM_LDFLAGS)" ;; *) echo "-version-info $(VERSION_INFO) $(RELEASE) $(NO_UNDEFINED) $(AM_LDFLAGS)" ;; esac)
 
 libevent_la_SOURCES = $(CORE_SRC) $(EXTRAS_SRC)
 libevent_la_LIBADD = @LTLIBOBJS@ $(SYS_LIBS) $(SYS_CORE_LIBS)
