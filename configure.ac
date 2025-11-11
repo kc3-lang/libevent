@@ -88,6 +88,8 @@ LT_INIT
 
 AC_SUBST(LIBTOOL_DEPS)
 
+AM_CONDITIONAL([ANDROID], [case $CC in *android*) true ;; *) false ;; esac])
+        
 AM_CONDITIONAL([BUILD_SAMPLES], [test "$enable_samples" = "yes"])
 AM_CONDITIONAL([BUILD_REGRESS], [test "$enable_libevent_regress" = "yes"])
 
